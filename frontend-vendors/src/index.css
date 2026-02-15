@@ -1,0 +1,197 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary-50: #fff1f2;
+  --color-primary-100: #ffe4e6;
+  --color-primary-200: #fecdd3;
+  --color-primary-300: #fda4af;
+  --color-primary-400: #fb7185;
+  --color-primary-500: #f43f5e;
+  --color-primary-600: #e11d48;
+  --color-primary-700: #be123c;
+  --color-primary-800: #9f1239;
+  --color-primary-900: #881337;
+  --color-primary-950: #4c0519;
+}
+
+@layer utilities {
+
+  /* Mobile-First Button Styles */
+  .btn-primary {
+    @apply inline-flex items-center justify-center px-4 py-3 md:py-2 border border-transparent text-base md:text-sm font-medium rounded-lg text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors shadow-sm min-h-[44px] md:min-h-0;
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center px-4 py-3 md:py-2 border border-gray-300 text-base md:text-sm font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors shadow-sm min-h-[44px] md:min-h-0;
+  }
+
+  /* Touch-Optimized Input Fields */
+  .input-field {
+    @apply block w-full px-4 py-3 md:px-3 md:py-2 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary-500 focus:border-primary-500 text-base md:text-sm transition-shadow min-h-[44px] md:min-h-0;
+  }
+
+  /* Card Hover Effects */
+  .card-hover {
+    @apply transition-all duration-300 hover:shadow-lg md:hover:-translate-y-1;
+  }
+
+  /* Mobile-Optimized Container */
+  .container-mobile {
+    @apply px-4 sm:px-6 lg:px-8 mx-auto max-w-7xl;
+  }
+
+  /* Touch Target - Minimum 44x44px */
+  .touch-target {
+    @apply min-h-[44px] min-w-[44px] flex items-center justify-center;
+  }
+
+  /* Responsive Grid */
+  .grid-responsive {
+    @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6;
+  }
+
+  /* Mobile Full Width */
+  .mobile-full {
+    @apply w-full md:w-auto;
+  }
+
+  /* Hide on Mobile */
+  .hide-mobile {
+    @apply hidden md:block;
+  }
+
+  /* Show on Mobile Only */
+  .show-mobile {
+    @apply block md:hidden;
+  }
+
+  /* Responsive Text */
+  .text-responsive-xl {
+    @apply text-2xl sm:text-3xl lg:text-4xl;
+  }
+
+  .text-responsive-lg {
+    @apply text-xl sm:text-2xl lg:text-3xl;
+  }
+
+  .text-responsive-base {
+    @apply text-base sm:text-lg;
+  }
+
+  /* Mobile-Optimized Spacing */
+  .section-padding {
+    @apply py-8 md:py-12 lg:py-16;
+  }
+
+  /* Scrollbar Styles */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Safe Area for Mobile Notches */
+  .safe-top {
+    padding-top: env(safe-area-inset-top);
+  }
+
+  .safe-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}
+
+/* Base Styles */
+body {
+  @apply bg-gray-50 text-gray-900 antialiased;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
+}
+
+/* Improve tap highlight on mobile */
+* {
+  -webkit-tap-highlight-color: rgba(225, 29, 72, 0.1);
+}
+
+/* Smooth Scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Focus Visible for Accessibility */
+*:focus-visible {
+  @apply outline-none ring-2 ring-primary-500 ring-offset-2;
+}
+
+/* Disable Pull-to-Refresh on Mobile */
+body {
+  overscroll-behavior-y: contain;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+  }
+
+  to {
+    transform: translateY(0);
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.2s ease-out;
+}
+
+.animate-slideUp {
+  animation: slideUp 0.3s ease-out;
+}
+
+/* Mobile Modal Styles */
+@media (max-width: 768px) {
+  .modal-mobile {
+    @apply fixed inset-0 z-50 bg-white;
+    animation: slideUp 0.3s ease-out;
+  }
+}
+
+/* Responsive Tables */
+@media (max-width: 768px) {
+  .table-responsive {
+    @apply block overflow-x-auto;
+  }
+
+  .table-responsive table {
+    @apply min-w-full;
+  }
+}
+
+/* Loading States */
+.skeleton {
+  @apply animate-pulse bg-gray-200 rounded;
+}
+
+/* Hide scrollbars globally but keep functionality */
+*::-webkit-scrollbar {
+  display: none;
+}
+
+* {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

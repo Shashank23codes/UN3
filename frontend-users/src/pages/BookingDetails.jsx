@@ -68,27 +68,11 @@ const BookingDetails = () => {
         }
     };
 
-    const handleDownloadReceipt = async () => {
-        try {
-            const token = localStorage.getItem('token');
-            const response = await axios.get(
-                `${import.meta.env.VITE_API_URL}/api/bookings/${id}/receipt`,
-                {
-                    headers: { Authorization: `Bearer ${token}` },
-                    responseType: 'blob'
-                }
-            );
-
-            const url = window.URL.createObjectURL(new Blob([response.data]));
-            const link = document.createElement('a');
-            link.href = url;
-            link.setAttribute('download', `receipt-${booking.bookingId}.pdf`);
-            document.body.appendChild(link);
-            link.click();
-            link.remove();
-            toast.success('Receipt downloaded');
-        } catch (error) {
-            toast.error('Failed to download receipt');
+    const handleDownloadReceipt = () => {
+        if (booking?.receiptNumber) {
+            navigate(`/booking-confirmation?receipt=${booking.receiptNumber}`);
+        } else {
+            toast.error('Receipt not available');
         }
     };
 

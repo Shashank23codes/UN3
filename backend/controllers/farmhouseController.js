@@ -194,7 +194,7 @@ const searchFarmhouses = async (req, res) => {
     try {
         const { location, checkIn, checkOut, guests, minPrice, maxPrice, amenities, sortBy } = req.query;
 
-        let query = { isActive: true };
+        let query = { isActive: true, verificationStatus: 'approved' };
 
         // Location Search
         if (location) {
@@ -314,6 +314,7 @@ const getAllFarmhouses = async (req, res) => {
 
         const farmhouses = await Farmhouse.find({
             isActive: true,
+            verificationStatus: 'approved',
             vendor: { $in: verifiedVendorIds }
         }).sort({ createdAt: -1 });
 

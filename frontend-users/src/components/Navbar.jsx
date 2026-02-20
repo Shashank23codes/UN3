@@ -58,7 +58,7 @@ const Navbar = () => {
     return (
         <>
             {/* Main Navbar */}
-            <nav className={`fixed w-full z-50 transition-all duration-300 ${scrolled
+            <nav className={`fixed w-full z-50 transition-all duration-300 print:hidden ${scrolled
                 ? 'bg-white shadow-md py-4'
                 : 'bg-white/95 backdrop-blur-md py-4 border-b border-gray-100'
                 }`}>

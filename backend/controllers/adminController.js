@@ -575,7 +575,53 @@ const rejectFarmhouse = async (req, res) => {
 };
 
 
-// @desc    Get System Settings
+// @desc    Get Single Farmhouse by ID (Admin)
+// @route   GET /api/admin/farmhouses/:id
+// @access  Private
+const getFarmhouseById = async (req, res) => {
+    try {
+        const farmhouse = await Farmhouse.findById(req.params.id)
+            .populate('vendor', 'name email phone isVerified businessName profileImage kyc');
+        if (!farmhouse) return res.status(404).json({ message: 'Farmhouse not found' });
+        res.json(farmhouse);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Server Error' });
+    }
+};
+
+// @desc    Revoke Farmhouse Approval (reset to pending)
+// @route   PUT /api/admin/farmhouses/:id/revoke
+// @access  Private
+const revokeFarmhouse = async (req, res) => {
+    try {
+        const { reason } = req.body;
+        const farmhouse = await Farmhouse.findById(req.params.id);
+        if (!farmhouse) return res.status(404).json({ message: 'Farmhouse not found' });
+
+        farmhouse.verificationStatus = 'pending';
+        farmhouse.rejectionReason = '';
+        farmhouse.isActive = false;
+        await farmhouse.save();
+
+        // Notify Vendor
+        await createNotification({
+            recipient: farmhouse.vendor,
+            recipientModel: 'Vendor',
+            type: 'farmhouse_pending',
+            title: 'Property Verification Revoked',
+            message: `Your property "${farmhouse.name}" has been returned to pending review.${reason ? ` Reason: ${reason}` : ''
+                }`,
+            data: { farmhouseId: farmhouse._id, reason }
+        });
+
+        res.json({ message: 'Farmhouse revoked to pending', farmhouse });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Server Error' });
+    }
+};
+
 // @route   GET /api/admin/settings
 // @access  Private
 const getSettings = async (req, res) => {
@@ -679,16 +725,22 @@ module.exports = {
     getVendorById,
     refreshVendorKYC,
     toggleVendorVerification,
+    getVendorsKYC,
+    approveKYC,
+    rejectKYC,
     getAllBookings,
     getEarnings,
     getAllUsers,
     getUserById,
     updateUserStatus,
     getAllFarmhouses,
+    getFarmhouseById,
     approveFarmhouse,
     rejectFarmhouse,
+    revokeFarmhouse,
     getSettings,
     updateSettings,
     updateAdminProfile,
     changeAdminPassword
 };
+

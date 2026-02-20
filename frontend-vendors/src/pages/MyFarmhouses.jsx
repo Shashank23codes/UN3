@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Plus, Home, MapPin, Edit, Trash2, Eye, Loader2, Users, Bed, IndianRupee, TrendingUp } from 'lucide-react';
+import { Plus, Home, MapPin, Edit, Trash2, Eye, Loader2, Users, Bed, IndianRupee, TrendingUp, CheckCircle, Clock, X, AlertTriangle, ShieldCheck } from 'lucide-react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 
@@ -48,8 +48,33 @@ const MyFarmhouses = () => {
         return {
             total: farmhouses.length,
             active: farmhouses.filter(f => f.isActive).length,
-            paused: farmhouses.filter(f => !f.isActive).length
+            paused: farmhouses.filter(f => !f.isActive).length,
+            approved: farmhouses.filter(f => f.verificationStatus === 'approved').length,
+            pending: farmhouses.filter(f => f.verificationStatus === 'pending').length,
+            rejected: farmhouses.filter(f => f.verificationStatus === 'rejected').length,
         };
+    };
+
+    const getVerificationBadge = (fh) => {
+        if (fh.verificationStatus === 'approved') {
+            return (
+                <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-emerald-100 text-emerald-700 border border-emerald-200 rounded-full text-xs font-semibold">
+                    <CheckCircle className="h-3 w-3" /> Verified
+                </span>
+            );
+        } else if (fh.verificationStatus === 'rejected') {
+            return (
+                <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-red-100 text-red-700 border border-red-200 rounded-full text-xs font-semibold">
+                    <X className="h-3 w-3" /> Rejected
+                </span>
+            );
+        } else {
+            return (
+                <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-amber-100 text-amber-700 border border-amber-200 rounded-full text-xs font-semibold">
+                    <Clock className="h-3 w-3" /> Pending Review
+                </span>
+            );
+        }
     };
 
     if (loading) {
@@ -135,6 +160,26 @@ const MyFarmhouses = () => {
                 </div>
             )}
 
+            {/* Verification Status Alert Banner */}
+            {farmhouses.length > 0 && (stats.pending > 0 || stats.rejected > 0) && (
+                <div className={`mb-6 p-4 rounded-2xl border flex items-start gap-3 ${stats.rejected > 0 ? 'bg-red-50 border-red-200' : 'bg-amber-50 border-amber-200'
+                    }`}>
+                    <AlertTriangle className={`h-5 w-5 flex-shrink-0 mt-0.5 ${stats.rejected > 0 ? 'text-red-600' : 'text-amber-600'}`} />
+                    <div>
+                        <p className={`font-semibold text-sm ${stats.rejected > 0 ? 'text-red-700' : 'text-amber-700'}`}>
+                            {stats.rejected > 0
+                                ? `${stats.rejected} property rejected by admin`
+                                : `${stats.pending} property pending admin review`}
+                        </p>
+                        <p className={`text-xs mt-0.5 ${stats.rejected > 0 ? 'text-red-600' : 'text-amber-600'}`}>
+                            {stats.rejected > 0
+                                ? 'Please review the rejection reason(s) shown on the cards below and make any necessary updates.'
+                                : 'Your listing will become visible to users once the admin approves it.'}
+                        </p>
+                    </div>
+                </div>
+            )}
+
             {/* Properties Grid */}
             {farmhouses.length === 0 ? (
                 <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-12 text-center">
@@ -167,11 +212,10 @@ const MyFarmhouses = () => {
                                 <div className="absolute top-3 right-3 bg-white/95 backdrop-blur-sm px-3 py-1.5 rounded-lg text-xs font-bold shadow-md text-gray-700">
                                     {farmhouse.type}
                                 </div>
-                                <div className={`absolute top-3 left-3 px-3 py-1.5 rounded-lg text-xs font-bold shadow-md ${farmhouse.isActive
-                                        ? 'bg-green-500 text-white'
-                                        : 'bg-gray-500 text-white'
-                                    }`}>
-                                    {farmhouse.isActive ? 'ACTIVE' : 'PAUSED'}
+                                <div className={`absolute top-3 left-3 flex flex-col gap-1`}>
+                                    <span className={`px-2.5 py-1 rounded-lg text-xs font-bold shadow-md ${farmhouse.isActive ? 'bg-green-500 text-white' : 'bg-gray-500 text-white'}`}>
+                                        {farmhouse.isActive ? 'ACTIVE' : 'PAUSED'}
+                                    </span>
                                 </div>
                                 <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4">
                                     <div className="flex items-center text-white text-sm">
@@ -183,9 +227,20 @@ const MyFarmhouses = () => {
 
                             {/* Content Section */}
                             <div className="p-6 flex-1 flex flex-col">
-                                <h3 className="text-lg font-bold text-gray-900 line-clamp-1 group-hover:text-emerald-600 transition-colors mb-3">
+                                <h3 className="text-lg font-bold text-gray-900 line-clamp-1 group-hover:text-emerald-600 transition-colors mb-2">
                                     {farmhouse.name}
                                 </h3>
+                                {/* Verification Status Badge */}
+                                <div className="mb-3">
+                                    {getVerificationBadge(farmhouse)}
+                                </div>
+                                {/* Rejection Reason */}
+                                {farmhouse.verificationStatus === 'rejected' && farmhouse.rejectionReason && (
+                                    <div className="mb-3 p-2.5 bg-red-50 border border-red-100 rounded-lg">
+                                        <p className="text-xs text-red-600 font-medium">Rejection reason:</p>
+                                        <p className="text-xs text-red-700 mt-0.5">{farmhouse.rejectionReason}</p>
+                                    </div>
+                                )}
 
                                 {/* Quick Stats */}
                                 <div className="flex items-center gap-4 text-sm text-gray-600 mb-4">

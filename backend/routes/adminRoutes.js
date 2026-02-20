@@ -18,8 +18,10 @@ const {
     getUserById,
     updateUserStatus,
     getAllFarmhouses,
+    getFarmhouseById,
     approveFarmhouse,
     rejectFarmhouse,
+    revokeFarmhouse,
     getSettings,
     updateSettings,
     updateAdminProfile,
@@ -56,8 +58,10 @@ router.post('/vendors/:id/refresh-kyc', protectAdmin, refreshVendorKYC);
 
 // Farmhouse Management
 router.get('/farmhouses', protectAdmin, getAllFarmhouses);
+router.get('/farmhouses/:id', protectAdmin, getFarmhouseById);
 router.put('/farmhouses/:id/approve', protectAdmin, approveFarmhouse);
 router.put('/farmhouses/:id/reject', protectAdmin, rejectFarmhouse);
+router.put('/farmhouses/:id/revoke', protectAdmin, revokeFarmhouse);
 
 // System Settings
 router.get('/settings', protectAdmin, getSettings);

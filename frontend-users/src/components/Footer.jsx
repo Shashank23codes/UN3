@@ -70,7 +70,7 @@ const Footer = () => {
                         <h3 className="font-bold text-white text-lg border-b border-gray-700 pb-2">For Hosts</h3>
                         <ul className="space-y-3 text-sm">
                             <li>
-                                <a href={`${import.meta.env.VITE_VENDOR_URL || 'http://localhost:5174'}`} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-rose-400 transition-colors flex items-center group">
+                                <a href={`${import.meta.env.VITE_VENDOR_URL || 'https://utsavnest-vendor.netlify.app'}`} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-rose-400 transition-colors flex items-center group">
                                     <span className="w-0 group-hover:w-2 h-0.5 bg-rose-400 mr-0 group-hover:mr-2 transition-all"></span>
                                     List Your Property
                                 </a>
